@@ -17,7 +17,7 @@ jobs:
       run: 7z x or-tools_VisualStudio2019-64bit_v9.2.9972.zip
         
     - name: Configure
-      run: md build && cmake -S. -Bbuild -G "Visual Studio 16 2019" -DOR_TOOLS_ROOT="or-tools_VisualStudio2019-64bit_v9.2.9972" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="build/or-tools" 
+      run: md build && cmake -S. -Bbuild -G "Visual Studio 16 2019" -DOR_TOOLS_ROOT="%GITHUB_WORKSPACE%/or-tools_VisualStudio2019-64bit_v9.2.9972" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="build/or-tools" 
 
     - name: Build
       run: cmake --build build --config Release --target ALL_BUILD -v -- /maxcpucount
