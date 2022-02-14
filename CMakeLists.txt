@@ -13,8 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(ortools STATIC IMPORTED)
 
-set_property(TARGET ortools PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# set_property(TARGET ortools PROPERTY
+#  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
   
 set_property(
   TARGET ortools APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
@@ -62,9 +62,7 @@ add_executable(${PROJECT_NAME}
     "src/main.cpp"
 )
 
-
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY
-  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# t_property(TARGET ${PROJECT_NAME} PROPERTY
+#  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 target_link_libraries(${PROJECT_NAME} psapi ws2_32 ortools)
