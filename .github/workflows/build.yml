@@ -1,0 +1,24 @@
+name: CMake Windows C++
+
+on: [push]
+
+jobs:
+  # Building using the github runner environement directly.
+  cmake:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check cmake
+      run: cmake --version
+    - name: Download or-tools
+      run: aria2c https://github.com/google/or-tools/releases/download/v9.2/or-tools_VisualStudio2019-64bit_v9.2.9972.zip
+      
+    - name: Extract some files
+      run: 7z x or-tools_VisualStudio2019-64bit_v9.2.9972.zip
+        
+    - name: Configure
+      run: md build && cmake -S. -Bbuild -G "Visual Studio 16 2019" -DOR_TOOLS_ROOT="or-tools_VisualStudio2019-64bit_v9.2.9972" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="build/or-tools" 
+
+    - name: Build
+      run: cmake --build build --config Release --target ALL_BUILD -v -- /maxcpucount
+      
