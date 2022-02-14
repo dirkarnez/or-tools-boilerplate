@@ -33,12 +33,12 @@ jobs:
       uses: thedoctor0/zip-release@master
       with:
         type: "zip"
-        directory: "build"
+        directory: "build/Release"
         filename: "${{ env.msvc2019TargetZip }}"
 
     - name: Release prebuilt
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "build/${{ env.msvc2019TargetZip }}"
+        artifacts: "build/Release/${{ env.msvc2019TargetZip }}"
         allowUpdates: true
         token: ${{ secrets.GITHUB_TOKEN }}
