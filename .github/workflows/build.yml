@@ -1,20 +1,27 @@
-name: CMake Windows C++
-
-on: [push]
+name: or-tools-boilerplate-release-actions-workflow
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  # Building using the github runner environement directly.
-  cmake:
+  build:
+    name: Create Release
     runs-on: windows-latest
+    env:
+      msvc2019TargetZip: or-tools-boilerplate-${{ github.ref_name }}-msvc2019.zip
     steps:
     - uses: actions/checkout@v2
+    
     - name: Check cmake
       run: cmake --version
+      
     - name: Download or-tools
       run: aria2c https://github.com/google/or-tools/releases/download/v9.2/or-tools_VisualStudio2019-64bit_v9.2.9972.zip
       
     - name: Extract some files
-      run: 7z x or-tools_VisualStudio2019-64bit_v9.2.9972.zip && dir
+      run: 7z x or-tools_VisualStudio2019-64bit_v9.2.9972.zip
         
     - name: Configure
       run: md build && cmake -S. -Bbuild -G "Visual Studio 16 2019" -DOR_TOOLS_ROOT="${{ github.workspace }}/or-tools_VisualStudio2019-64bit_v9.2.9972" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="build/or-tools" 
@@ -22,3 +29,16 @@ jobs:
     - name: Build
       run: cmake --build build --config Release --target ALL_BUILD -v -- /maxcpucount
       
+    - name: Archive Release
+      uses: thedoctor0/zip-release@master
+      with:
+        type: "zip"
+        directory: "build"
+        filename: "${{ env.msvc2019TargetZip }}"
+
+    - name: Release prebuilt
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build/${{ env.msvc2019TargetZip }}"
+        allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
